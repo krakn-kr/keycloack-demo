@@ -1,30 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
     <title>Silent SSO Check</title>
-    <script src="keycloak.js"></script>
-    <script>
-        var keycloak = new Keycloak();
-        keycloak.init({
-            onLoad: 'check-sso',
-            silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
-            silentCheckSsoFallback: false
-        }).then(function(authenticated) {
-            window.parent.postMessage({
-                'type': 'sso-check-result',
-                'authenticated': authenticated
-            }, window.location.origin);
-        }).catch(function(error) {
-            console.error('Silent SSO check failed:', error);
-            window.parent.postMessage({
-                'type': 'sso-check-error',
-                'error': error
-            }, window.location.origin);
-        });
-    </script>
 </head>
 <body>
-    <!-- The page intentionally left blank -->
+    <script>
+        parent.postMessage(location.href, location.origin);
+    </script>
 </body>
 </html>

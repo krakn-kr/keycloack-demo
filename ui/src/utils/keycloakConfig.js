@@ -3,7 +3,7 @@ import Keycloak from 'keycloak-js';
 const keycloak = new Keycloak({
   url: 'http://localhost:8080/',
   realm: 'react-apps',
-  clientId: 'react-demo',
+  clientId: 'react-demo'
 });
 
 export default keycloak;

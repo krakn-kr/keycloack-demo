@@ -1,65 +1,42 @@
-import { useKeycloak } from '@react-keycloak/web';
-import { useEffect, useState } from 'react';
+// src/pages/Dashboard.jsx
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import Header from "../components/common/Header";
+import Sidebar from "../components/common/Sidebar";
+import { setActiveTab } from "../features/tabs/tabsSlice";
 
 const Dashboard = () => {
-  const { keycloak } = useKeycloak();
-  const [data, setData] = useState('');
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-console.log(keycloak);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { activeTab } = useSelector((state) => state.tabs);
+  const { sidebarOpen } = useSelector((state) => state.ui);
+
+  // Set active tab based on URL
   useEffect(() => {
-    if (keycloak?.authenticated && keycloak?.token) {
-      protectedEndpoint();
+    const path = location.pathname;
+    if (path.includes("tab1")) {
+      dispatch(setActiveTab("tab1"));
+    } else if (path.includes("tab2")) {
+      dispatch(setActiveTab("tab2"));
+    } else if (path.includes("tab3")) {
+      dispatch(setActiveTab("tab3"));
+    } else if (path === "/dashboard") {
+      // If at root dashboard path, navigate to active tab
+      navigate(`/dashboard/${activeTab}`, { replace: true });
     }
-  }, [keycloak]); // Add keycloak to dependency array
-
-  const protectedEndpoint = async () => {
-    try {
-      const response = await fetch("http://localhost:9090/api/protected", {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${keycloak.token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const responseData = await response.text();
-      setData(responseData);
-    } catch (err) {
-      setError(err.message || 'Failed to fetch protected data');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return <div>Loading protected data...</div>;
-  }
-
-  if (error) {
-    return <div className="error">Error: {error}</div>;
-  }
+  }, [location.pathname, dispatch, navigate, activeTab]);
 
   return (
-    <div className="dashboard">
-      <h1>Dashboard (Protected)</h1>
-      <p>Welcome, {keycloak.tokenParsed?.preferred_username || 'User'}!</p>
-      
-      <div className="data-section">
-        <h2>Protected Data:</h2>
-        <pre>{data}</pre>
+    <div className="flex flex-col h-screen">
+      <Header />
+      <div className="flex flex-1 overflow-hidden">
+        {sidebarOpen && <Sidebar />}
+        <main className="flex-1 overflow-y-auto bg-gray-50">
+          <Outlet />
+        </main>
       </div>
-
-      <button 
-        onClick={() => keycloak.logout()}
-        className="logout-button"
-      >
-        Logout
-      </button>
     </div>
   );
 };

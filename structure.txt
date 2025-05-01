@@ -1,0 +1,32 @@
+src/
+├── api/
+│   ├── axiosInstance.js       // Configured axios with interceptors for auth
+│   └── services.js            // API service functions for each tab
+├── assets/                    // Images, icons, etc.
+├── components/
+│   ├── common/                // Reusable components
+│   │   ├── Header.jsx
+│   │   ├── Sidebar.jsx
+│   │   ├── ProtectedRoute.jsx
+│   │   └── Loader.jsx
+│   └── tabs/                  // Tab-specific components
+│       ├── Tab1Content.jsx
+│       ├── Tab2Content.jsx
+│       └── Tab3Content.jsx
+├── features/                  // Redux Toolkit slices
+│   ├── auth/
+│   │   └── authSlice.js       // Authentication state management
+│   ├── tabs/
+│   │   └── tabsSlice.js       // Tab data state management
+│   └── ui/
+│       └── uiSlice.js         // UI state (loading, errors, etc.)
+├── pages/
+│   ├── Login.jsx              // Login page
+│   ├── Dashboard.jsx          // Main dashboard with tabs
+│   └── NotFound.jsx           // 404 page
+├── utils/
+│   ├── keycloakConfig.js      // Keycloak configuration
+│   └── helpers.js             // Helper functions
+├── App.jsx                    // Main App component with routes
+├── index.jsx                  // Entry point
+└── store.js                   // Redux store configuration
